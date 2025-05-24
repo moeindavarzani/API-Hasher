@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API-Hasher - Advanced Hash Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="master-container">
+        <header class="app-header">
+            <h1><span class="logo-accent">API</span>-Hasher</h1>
+            <p>Securely generate SHA-256 hashes for your data.</p>
+        </header>
+
+        <main class="main-content">
+            <section class="form-container card">
+                <h2>Generate Hash via UI</h2>
+                <form method="POST" action="{{ url_for('index_page') }}">
+                    <div class="form-group">
+                        <label for="inputText">Enter Text or Code:</label>
+                        <textarea name="inputText" id="inputText" rows="6" placeholder="Paste your content here...">{{ original_text if original_text else '' }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Calculate Hash</button>
+                </form>
+            </section>
+
+            {% if error_message %}
+            <section class="result-container card error-card">
+                <h2>Error</h2>
+                <p class="error-text">{{ error_message }}</p>
+            </section>
+            {% endif %}
+
+            {% if hashed_value and not error_message %}
+            <section class="result-container card success-card">
+                <h2>Hash Result</h2>
+                {% if original_text %}
+                <div class="result-item">
+                    <p><strong>Original Input:</strong></p>
+                    <pre class="text-box original-text-box">{{ original_text }}</pre>
+                </div>
+                {% endif %}
+                <div class="result-item">
+                    <p><strong>SHA-256 Hash:</strong></p>
+                    <div class="hash-display">
+                        <pre id="hashedValue" class="text-box hash-output-box">{{ hashed_value }}</pre>
+                        <button type="button" onclick="copyHash()" class="btn btn-copy" title="Copy to Clipboard">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                              <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                              <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                            </svg> Copy
+                        </button>
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+        </main>
+        
+        <footer class="app-footer">
+            <p>Programmatic access API endpoint: <code>POST /api/hash</code> (Content-Type: application/json)</p>
+            <p>Request body example: <code>{"text": "your string to hash"}</code></p>
+            <p>&copy; 2025 API-Hasher. Powered by Flask.</p>
+        </footer>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
