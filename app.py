@@ -105,4 +105,4 @@ def api_hash():
     }), 200
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
