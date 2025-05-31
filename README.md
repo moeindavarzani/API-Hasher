@@ -1,23 +1,31 @@
 # API-Hasher
 
-API-Hasher is a simple web application built with Flask (Python) that provides a user interface and a RESTful API endpoint for generating SHA-256 hashes from text input.
+API-Hasher is a versatile application providing SHA-256 hash generation through multiple interfaces: a Flask-based web application and a native Windows desktop GUI.
 
 ## Features
 
-*   **Web Interface:** A clean and responsive UI to manually input text and get its SHA-256 hash.
-*   **API Endpoint:** A `/api/hash` endpoint for programmatic hash generation.
-*   **SHA-256 Algorithm:** Uses the standard SHA-256 hashing algorithm.
-*   **Responsive Design:** The web interface is designed to work on various screen sizes.
-*   **Error Handling:** Provides basic error messages for both UI and API interactions.
+*   **Web Interface:** A clean and responsive UI to manually input text and get its SHA-256 hash via your browser.
+*   **API Endpoint:** A `/api/hash` endpoint for programmatic hash generation, suitable for integration with other services.
+*   **Desktop GUI (Windows Edition):** A native desktop application built with PyQt6, offering an enhanced user experience with features like history, theme toggling, and direct API interaction from the GUI.
+*   **SHA-256 Algorithm:** Uses the standard SHA-256 hashing algorithm for all operations.
+*   **Responsive Design (Web):** The web interface is designed to work on various screen sizes.
+*   **Error Handling:** Provides basic error messages for UI (web and desktop) and API interactions.
 
-### User Interface Preview
+### User Interface Previews
 
-![API-Hasher User Interface Screenshot](docs/images/api_hasher_ui.png)
+**Web Application:**
+
+![API-Hasher Web User Interface](docs/images/api_hasher_ui.png)
+
+**Desktop GUI (Windows Edition):**
+
+![API-Hasher Desktop GUI](docs/images/api_hasher_desktop.png)
 
 ## Prerequisites
 
 *   Python 3.7+
 *   pip (Python package installer)
+*   Note: The Desktop GUI additionally requires `PyQt6` and `requests`, which are included in `requirements.txt`.
 
 ## Getting Started
 
@@ -50,19 +58,33 @@ python -m venv venv
 
 ### 3. Install Dependencies
 
-With the virtual environment activated, install the required packages using the `requirements.txt` file:
+With the virtual environment activated, install the required packages using the `requirements.txt` file. This will install Flask for the web app, and PyQt6/requests for the desktop GUI.
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Run the Application
+### 4. Running the Applications
+
+#### a. Web Application & API
+
+To start the Flask web server (which also serves the API):
 
 ```bash
 python app.py
 ```
 
-The application will start, typically on `http://127.0.0.1:5000/`. Open this URL in your web browser to access the UI.
+The web application will start, typically on `http://127.0.0.1:5000/`. Open this URL in your web browser to access the UI. The API endpoint (`/api/hash`) will also be available at this address.
+
+#### b. Desktop GUI (Windows Edition)
+
+To run the native desktop application:
+
+```bash
+python desktop_gui/hasher_gui.py
+```
+
+This will launch the API-Hasher Pro desktop application. Ensure the Flask web application (`app.py`) is running if you want the desktop GUI to interact with the local API endpoint (default: `http://127.0.0.1:5000/api/hash`).
 
 ## Web Interface Usage
 
@@ -72,9 +94,17 @@ The application will start, typically on `http://127.0.0.1:5000/`. Open this URL
 4.  The original text (if provided) and its SHA-256 hash will be displayed.
 5.  You can use the "Copy" button to copy the hash to your clipboard.
 
+## Desktop GUI Usage
+
+1.  Run `desktop_gui/hasher_gui.py` as described in "Getting Started".
+2.  The application provides a rich interface for text input.
+3.  Use the "Generate SHA-256 Hash" button. The GUI will interact with the API (configurable, defaults to local Flask app).
+4.  Results are displayed, and can be copied, saved to history, or compared.
+5.  Additional features include theme toggling (Light/Dark), input statistics, history search, and hash formatting.
+
 ## API Usage
 
-The application provides a RESTful API endpoint for generating hashes programmatically.
+The application provides a RESTful API endpoint for generating hashes programmatically. This API is served by the Flask web application (`app.py`).
 
 *   **Endpoint:** `/api/hash`
 *   **Method:** `POST`
@@ -91,6 +121,8 @@ The request body must be a JSON object containing a `text` field:
 ```
 
 ### Example Request (using `curl`)
+
+Assuming the Flask app is running on `http://127.0.0.1:5000/`:
 
 ```bash
 curl -X POST -H "Content-Type: application/json" -d '{"text":"hello world"}' http://127.0.0.1:5000/api/hash
@@ -122,19 +154,22 @@ If successful, the API will return a JSON object with the original text and its 
 
 ```
 API-Hasher/
+├── desktop_gui/        # Source code for the Desktop GUI (PyQt6)
+│   └── hasher_gui.py
 ├── docs/
 │   └── images/
+│       ├── api_hasher_desktop.png
 │       └── api_hasher_ui.png
-├── app.py              # Main Flask application file, includes API logic
-├── static/             # Static files (CSS, JavaScript)
+├── app.py              # Main Flask application file (web app & API)
+├── static/             # Static files (CSS, JavaScript) for web app
 │   ├── script.js
 │   └── style.css
-├── templates/          # HTML templates
+├── templates/          # HTML templates for web app
 │   └── index.html
-├── .gitignore          # Specifies intentionally untracked files that Git should ignore
+├── .gitignore          # Specifies intentionally untracked files by Git
 ├── LICENSE             # Project license information
 ├── README.md           # This file
-└── requirements.txt    # Project dependencies
+└── requirements.txt    # Project dependencies for both web and desktop apps
 ```
 
 ## Contributing
